@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt bàn | Coffee House</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee': '#6F4E37',
+                        'cream': '#F9F4EE',
+                        'coffee-light': '#8B6F47',
+                        'coffee-dark': '#5D3E2A'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-cream">
+    <!-- Header (Fixed) -->
+    <header class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-coffee rounded-full flex items-center justify-center">
+                        <i class="fas fa-coffee text-white text-lg sm:text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-bold text-coffee">Coffee House</h1>
+                        <p class="text-xs text-gray-600 hidden sm:block">Premium Coffee Experience</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden lg:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors">Trang chủ</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors">Menu</a>
+                    <a href="#" class="text-coffee font-semibold">Đặt bàn</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors">Khuyến mãi</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors">Liên hệ</a>
+                </nav>
+
+                <!-- Search Bar -->
+                <div class="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 max-w-xs">
+                    <i class="fas fa-search text-gray-400 mr-2"></i>
+                    <input type="text" placeholder="Tìm kiếm món..." class="bg-transparent outline-none text-sm flex-1">
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <!-- Cart -->
+                    <div class="relative">
+                        <button class="p-2 bg-coffee text-white rounded-full hover:bg-coffee-dark transition-colors">
+                            <i class="fas fa-shopping-cart text-sm sm:text-base"></i>
+                        </button>
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button class="bg-coffee text-white px-3 py-2 sm:px-4 sm:py-2 rounded-full hover:bg-coffee-dark transition-colors text-sm">
+                        <i class="fas fa-user mr-1 sm:mr-2"></i><span class="hidden sm:inline">Đăng nhập</span>
+                    </button>
+
+                    <!-- Mobile Menu -->
+                    <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-coffee text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="lg:hidden bg-white border-t border-gray-200 hidden">
+            <nav class="container mx-auto px-4 py-4 space-y-3">
+                <a href="#" class="block text-gray-700 hover:text-coffee">Trang chủ</a>
+                <a href="#" class="block text-gray-700 hover:text-coffee">Menu</a>
+                <a href="#" class="block text-coffee font-semibold">Đặt bàn</a>
+                <a href="#" class="block text-gray-700 hover:text-coffee">Khuyến mãi</a>
+                <a href="#" class="block text-gray-700 hover:text-coffee">Liên hệ</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24">
+        <!-- Breadcrumb -->
+        <section class="bg-white py-4 border-b border-gray-200">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <nav class="flex items-center space-x-2 text-sm">
+                    <a href="#" class="text-gray-600 hover:text-coffee transition-colors">Trang chủ</a>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                    <span class="text-coffee font-semibold">Đặt bàn</span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-coffee to-coffee-light text-white py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="max-w-3xl mx-auto">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+                        <i class="fas fa-chair mr-4"></i>Đặt Bàn
+                    </h1>
+                    <p class="text-xl sm:text-2xl mb-8 opacity-90">
+                        Đặt chỗ ngay để tận hưởng không gian ấm cúng và hương vị cà phê đậm đà
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 text-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-2"></i>
+                            <span>Mở cửa 6:30 - 23:00</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-users mr-2"></i>
+                            <span>Phục vụ 2-20 người</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reservation Form Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Reservation Form -->
+                    <div class="bg-white rounded-2xl shadow-xl p-8">
+                        <div class="text-center mb-8">
+                            <h2 class="text-3xl font-bold text-coffee mb-4">Thông tin đặt bàn</h2>
+                            <p class="text-gray-600">Vui lòng điền đầy đủ thông tin để chúng tôi phục vụ bạn tốt nhất</p>
+                        </div>
+
+                        <form id="reservationForm" class="space-y-6">
+                            <!-- Customer Information -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-user mr-2 text-coffee"></i>Họ và tên *
+                                    </label>
+                                    <input type="text" id="customerName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập họ và tên">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-phone mr-2 text-coffee"></i>Số điện thoại *
+                                    </label>
+                                    <input type="tel" id="customerPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập số điện thoại">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-envelope mr-2 text-coffee"></i>Email
+                                </label>
+                                <input type="email" id="customerEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập địa chỉ email (tùy chọn)">
+                            </div>
+
+                            <!-- Reservation Details -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-calendar mr-2 text-coffee"></i>Ngày đặt bàn *
+                                    </label>
+                                    <input type="date" id="reservationDate" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-clock mr-2 text-coffee"></i>Giờ đặt bàn *
+                                    </label>
+                                    <select id="reservationTime" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                                        <option value="">Chọn giờ</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="07:30">07:30</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="08:30">08:30</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="09:30">09:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="20:30">20:30</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="21:30">21:30</option>
+                                        <option value="22:00">22:00</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-users mr-2 text-coffee"></i>Số người *
+                                    </label>
+                                    <select id="guestCount" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                                        <option value="">Chọn số người</option>
+                                        <option value="1">1 người</option>
+                                        <option value="2">2 người</option>
+                                        <option value="3">3 người</option>
+                                        <option value="4">4 người</option>
+                                        <option value="5">5 người</option>
+                                        <option value="6">6 người</option>
+                                        <option value="7">7 người</option>
+                                        <option value="8">8 người</option>
+                                        <option value="9">9 người</option>
+                                        <option value="10">10 người</option>
+                                        <option value="15">11-15 người</option>
+                                        <option value="20">16-20 người</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        <i class="fas fa-chair mr-2 text-coffee"></i>Loại bàn
+                                    </label>
+                                    <select id="tableType" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                                        <option value="">Không yêu cầu đặc biệt</option>
+                                        <option value="window">Bàn cạnh cửa sổ</option>
+                                        <option value="quiet">Khu vực yên tĩnh</option>
+                                        <option value="outdoor">Khu vực ngoài trời</option>
+                                        <option value="private">Phòng riêng</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Special Requests -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-comment mr-2 text-coffee"></i>Yêu cầu đặc biệt
+                                </label>
+                                <textarea id="specialRequests" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent resize-none" placeholder="Ví dụ: Sinh nhật, kỷ niệm, yêu cầu trang trí đặc biệt..."></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="w-full bg-coffee text-white py-4 rounded-full text-lg font-bold hover:bg-coffee-dark transition-colors transform hover:scale-105">
+                                <i class="fas fa-calendar-check mr-2"></i>Đặt bàn ngay
+                            </button>
+                        </form>
+
+                        <!-- Contact Info -->
+                        <div class="mt-8 p-6 bg-cream rounded-xl">
+                            <h3 class="text-lg font-semibold text-coffee mb-4 flex items-center">
+                                <i class="fas fa-info-circle mr-2"></i>Lưu ý quan trọng
+                            </h3>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mr-2 mt-1 text-xs"></i>
+                                    <span>Chúng tôi sẽ liên hệ xác nhận trong vòng 15 phút</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mr-2 mt-1 text-xs"></i>
+                                    <span>Bàn sẽ được giữ trong 15 phút kể từ giờ đặt</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-600 mr-2 mt-1 text-xs"></i>
+                                    <span>Miễn phí hủy bàn trước 2 giờ</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-phone text-coffee mr-2 mt-1 text-xs"></i>
+                                    <span>Hotline: <strong>0123 456 789</strong></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Restaurant Info & Map -->
+                    <div class="space-y-8">
+                        <!-- Restaurant Images -->
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                            <div class="relative h-64">
+                                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coffee House Interior" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                    <h3 class="text-white text-2xl font-bold">Không gian ấm cúng</h3>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold text-coffee mb-4">Về Coffee House</h3>
+                                <p class="text-gray-600 leading-relaxed mb-4">
+                                    Với không gian ấm cúng và hiện đại, Coffee House là nơi lý tưởng để bạn thư giãn, 
+                                    làm việc hoặc gặp gỡ bạn bè. Chúng tôi phục vụ những ly cà phê tuyệt hảo từ 
+                                    những hạt cà phê chất lượng cao được rang xay tại chỗ.
+                                </p>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-wifi text-coffee mr-2"></i>
+                                        <span>WiFi miễn phí</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-car text-coffee mr-2"></i>
+                                        <span>Bãi đỗ xe</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-snowflake text-coffee mr-2"></i>
+                                        <span>Điều hòa</span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600">
+                                        <i class="fas fa-music text-coffee mr-2"></i>
+                                        <span>Nhạc nhẹ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opening Hours -->
+                        <div class="bg-white rounded-2xl shadow-xl p-6">
+                            <h3 class="text-2xl font-bold text-coffee mb-6 flex items-center">
+                                <i class="fas fa-clock mr-3"></i>Giờ mở cửa
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                    <span class="font-medium text-gray-700">Thứ 2 - Thứ 6</span>
+                                    <span class="text-coffee font-bold">6:30 - 22:00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                    <span class="font-medium text-gray-700">Thứ 7 - Chủ nhật</span>
+                                    <span class="text-coffee font-bold">6:30 - 23:00</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span class="font-medium text-gray-700">Ngày lễ</span>
+                                    <span class="text-coffee font-bold">7:00 - 22:00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Google Map -->
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                            <div class="p-6 border-b border-gray-200">
+                                <h3 class="text-2xl font-bold text-coffee flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-3"></i>Vị trí quán
+                                </h3>
+                                <p class="text-gray-600 mt-2">123 Nguyễn Văn Linh, Quận 7, TP.HCM</p>
+                            </div>
+                            <div class="h-80 relative">
+                                <iframe 
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.9544939756947!2d106.69017731533613!3d10.732632792331814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1c06f4e1dd%3A0x43900f1d4539a3d!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBGUFQgVFAuSENN!5e0!3m2!1svi!2s!4v1635123456789!5m2!1svi!2s" 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0;" 
+                                    allowfullscreen="" 
+                                    loading="lazy" 
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    class="rounded-b-2xl">
+                                </iframe>
+                                <div class="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-3">
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                        <span class="text-sm font-semibold text-gray-700">Coffee House</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-phone text-coffee mr-1"></i>
+                                            <span>0123 456 789</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-envelope text-coffee mr-1"></i>
+                                            <span>info@coffeehouse.vn</span>
+                                        </div>
+                                    </div>
+                                    <button onclick="openGoogleMaps()" class="bg-coffee text-white px-4 py-2 rounded-lg text-sm hover:bg-coffee-dark transition-colors">
+                                        <i class="fas fa-directions mr-1"></i>Chỉ đường
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-coffee text-white py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                            <i class="fas fa-coffee text-coffee text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold">Coffee House</h3>
+                            <p class="text-sm opacity-80">Premium Coffee Experience</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        Nơi hội tụ của những tín đồ cà phê thực thụ với hương vị đậm đà và không gian ấm cúng.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Liên Kết Nhanh</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Trang chủ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Menu</a></li>
+                        <li><a href="#" class="text-white font-semibold">Đặt bàn</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Khuyến mãi</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Thông Tin Liên Hệ</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-cream mt-1"></i>
+                            <div>
+                                <p class="text-gray-300">123 Nguyễn Văn Linh</p>
+                                <p class="text-gray-300">Quận 7, TP.HCM</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-cream"></i>
+                            <p class="text-gray-300">0123 456 789</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-cream"></i>
+                            <p class="text-gray-300">info@coffeehouse.vn</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opening Hours -->
+                <div>
+                    <h4 class="text-xl font-semibold mb-6">Giờ Mở Cửa</h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Thứ 2 - Thứ 6:</span>
+                            <span class="text-white font-semibold">6:30 - 22:00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Thứ 7 - Chủ nhật:</span>
+                            <span class="text-white font-semibold">6:30 - 23:00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Ngày lễ:</span>
+                            <span class="text-white font-semibold">7:00 - 22:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white border-opacity-20 mt-12 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-300 mb-4 md:mb-0">
+                        © 2024 Coffee House. All rights reserved.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">Chính sách bảo mật</a>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">Điều khoản sử dụng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check-circle text-green-600 text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-coffee mb-4">Đặt bàn thành công!</h2>
+            <p class="text-gray-600 mb-6">Cảm ơn bạn đã đặt bàn. Chúng tôi sẽ liên hệ xác nhận trong vòng 15 phút.</p>
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <p class="text-sm text-gray-600 mb-2">Mã đặt bàn:</p>
+                <p class="text-lg font-bold text-coffee" id="reservationCode">#RES240001</p>
+            </div>
+            <div class="flex space-x-4">
+                <button onclick="closeSuccessModal()" class="flex-1 bg-gray-100 text-gray-700 py-3 rounded-full font-semibold hover:bg-gray-200 transition-colors">
+                    Đóng
+                </button>
+                <button onclick="goToMenu()" class="flex-1 bg-coffee text-white py-3 rounded-full font-semibold hover:bg-coffee-dark transition-colors">
+                    Xem Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Set minimum date to today
+        function setMinDate() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateString = tomorrow.toISOString().split('T')[0];
+            document.getElementById('reservationDate').min = dateString;
+            document.getElementById('reservationDate').value = dateString;
+        }
+
+        // Form validation
+        function validateForm() {
+            const requiredFields = ['customerName', 'customerPhone', 'reservationDate', 'reservationTime', 'guestCount'];
+            let isValid = true;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                const value = field.value.trim();
+                
+                // Remove existing error styling
+                field.classList.remove('border-red-500', 'ring-red-500');
+                
+                if (!value) {
+                    field.classList.add('border-red-500', 'ring-red-500');
+                    isValid = false;
+                }
+            });
+            
+            // Phone validation
+            const phone = document.getElementById('customerPhone').value.trim();
+            const phoneRegex = /^[0-9]{10,11}$/;
+            if (phone && !phoneRegex.test(phone)) {
+                document.getElementById('customerPhone').classList.add('border-red-500', 'ring-red-500');
+                showNotification('Số điện thoại không hợp lệ!', 'error');
+                isValid = false;
+            }
+            
+            // Email validation (if provided)
+            const email = document.getElementById('customerEmail').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) {
+                document.getElementById('customerEmail').classList.add('border-red-500', 'ring-red-500');
+                showNotification('Email không hợp lệ!', 'error');
+                isValid = false;
+            }
+            
+            // Date validation
+            const selectedDate = new Date(document.getElementById('reservationDate').value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (selectedDate < today) {
+                document.getElementById('reservationDate').classList.add('border-red-500', 'ring-red-500');
+                showNotification('Không thể đặt bàn cho ngày trong quá khứ!', 'error');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                showNotification('Vui lòng điền đầy đủ thông tin bắt buộc!', 'error');
+            }
+            
+            return isValid;
+        }
+
+        // Handle form submission
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang xử lý...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Generate reservation code
+                const reservationCode = '#RES' + Date.now().toString().slice(-6);
+                document.getElementById('reservationCode').textContent = reservationCode;
+                
+                // Show success modal
+                document.getElementById('successModal').classList.remove('hidden');
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Reset form
+                document.getElementById('reservationForm').reset();
+                setMinDate();
+            }, 2000);
+        }
+
+        // Close success modal
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+
+        // Go to menu page
+        function goToMenu() {
+            window.location.href = '/menu';
+        }
+
+        // Open Google Maps
+        function openGoogleMaps() {
+            window.open('https://maps.google.com/?q=123+Nguyen+Van+Linh+District+7+Ho+Chi+Minh+City', '_blank');
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-24 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'info' ? 'bg-blue-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 'bg-gray-500 text-white'
+            }`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'info' ? 'info' : type === 'error' ? 'exclamation' : 'bell'}-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date
+            setMinDate();
+            
+            // Add form submit handler
+            document.getElementById('reservationForm').addEventListener('submit', handleFormSubmit);
+            
+            // Remove error styling on input
+            document.querySelectorAll('input, select, textarea').forEach(field => {
+                field.addEventListener('input', function() {
+                    this.classList.remove('border-red-500', 'ring-red-500');
+                });
+                
+                field.addEventListener('change', function() {
+                    this.classList.remove('border-red-500', 'ring-red-500');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

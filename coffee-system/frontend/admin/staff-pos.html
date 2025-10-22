@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS - Bán hàng | Coffee House Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee': '#6F4E37',
+                        'cream': '#F9F4EE',
+                        'coffee-light': '#8B6F47',
+                        'coffee-dark': '#5D3E2A'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-cream">
+    <!-- Top Bar -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
+        <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
+            <!-- Logo & Store Info -->
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-coffee rounded-full flex items-center justify-center">
+                        <i class="fas fa-coffee text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-coffee">Coffee House POS</h1>
+                        <p class="text-xs text-gray-600">Ca làm việc: 08:00 - 16:00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Time & Staff Info -->
+            <div class="flex items-center space-x-6">
+                <!-- Current Time -->
+                <div class="text-center">
+                    <div id="currentTime" class="text-lg font-bold text-coffee">14:35:20</div>
+                    <div class="text-xs text-gray-600">15/03/2024</div>
+                </div>
+
+                <!-- Staff Info -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Staff" class="w-10 h-10 rounded-full">
+                    <div>
+                        <p class="text-sm font-semibold text-coffee">Minh Tuấn</p>
+                        <p class="text-xs text-gray-600">Nhân viên bán hàng</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="showShiftReport()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Báo cáo ca">
+                        <i class="fas fa-chart-line text-coffee text-lg"></i>
+                    </button>
+                    <button onclick="logout()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Đăng xuất">
+                        <i class="fas fa-sign-out-alt text-coffee text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex h-[calc(100vh-80px)]">
+        <!-- Left Panel: Table Map & Menu -->
+        <div class="flex-1 flex flex-col">
+            <!-- Table Map -->
+            <div class="bg-white border-r border-gray-200 p-6 flex-1">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-coffee">Sơ đồ bàn</h2>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-green-500 rounded"></div>
+                            <span class="text-sm text-gray-600">Trống</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-orange-500 rounded"></div>
+                            <span class="text-sm text-gray-600">Có khách</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-red-500 rounded"></div>
+                            <span class="text-sm text-gray-600">Cần thanh toán</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-4 h-4 bg-blue-500 rounded"></div>
+                            <span class="text-sm text-gray-600">Đang chọn</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tables Grid -->
+                <div class="grid grid-cols-4 lg:grid-cols-6 gap-4 h-[calc(100%-80px)] overflow-y-auto">
+                    <!-- Table 01 -->
+                    <div onclick="selectTable(1)" class="table-item bg-green-100 border-2 border-green-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">01</span>
+                        </div>
+                        <span class="text-sm font-semibold text-green-700">Trống</span>
+                        <span class="text-xs text-gray-600">4 chỗ</span>
+                    </div>
+
+                    <!-- Table 02 -->
+                    <div onclick="selectTable(2)" class="table-item bg-orange-100 border-2 border-orange-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">02</span>
+                        </div>
+                        <span class="text-sm font-semibold text-orange-700">Có khách</span>
+                        <span class="text-xs text-gray-600">2 chỗ</span>
+                    </div>
+
+                    <!-- Table 03 -->
+                    <div onclick="selectTable(3)" class="table-item bg-red-100 border-2 border-red-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">03</span>
+                        </div>
+                        <span class="text-sm font-semibold text-red-700">Thanh toán</span>
+                        <span class="text-xs text-gray-600">6 chỗ</span>
+                    </div>
+
+                    <!-- Table 04 -->
+                    <div onclick="selectTable(4)" class="table-item bg-green-100 border-2 border-green-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">04</span>
+                        </div>
+                        <span class="text-sm font-semibold text-green-700">Trống</span>
+                        <span class="text-xs text-gray-600">4 chỗ</span>
+                    </div>
+
+                    <!-- Table 05 - Selected -->
+                    <div onclick="selectTable(5)" class="table-item bg-blue-100 border-2 border-blue-500 rounded-xl p-4 cursor-pointer shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">05</span>
+                        </div>
+                        <span class="text-sm font-semibold text-blue-700">Đang chọn</span>
+                        <span class="text-xs text-gray-600">4 chỗ</span>
+                    </div>
+
+                    <!-- Table 06 -->
+                    <div onclick="selectTable(6)" class="table-item bg-green-100 border-2 border-green-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">06</span>
+                        </div>
+                        <span class="text-sm font-semibold text-green-700">Trống</span>
+                        <span class="text-xs text-gray-600">2 chỗ</span>
+                    </div>
+
+                    <!-- Table 07 -->
+                    <div onclick="selectTable(7)" class="table-item bg-orange-100 border-2 border-orange-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">07</span>
+                        </div>
+                        <span class="text-sm font-semibold text-orange-700">Có khách</span>
+                        <span class="text-xs text-gray-600">6 chỗ</span>
+                    </div>
+
+                    <!-- Table 08 -->
+                    <div onclick="selectTable(8)" class="table-item bg-green-100 border-2 border-green-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">08</span>
+                        </div>
+                        <span class="text-sm font-semibold text-green-700">Trống</span>
+                        <span class="text-xs text-gray-600">4 chỗ</span>
+                    </div>
+
+                    <!-- Table 09 -->
+                    <div onclick="selectTable(9)" class="table-item bg-green-100 border-2 border-green-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">09</span>
+                        </div>
+                        <span class="text-sm font-semibold text-green-700">Trống</span>
+                        <span class="text-xs text-gray-600">8 chỗ</span>
+                    </div>
+
+                    <!-- Table 10 -->
+                    <div onclick="selectTable(10)" class="table-item bg-red-100 border-2 border-red-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">10</span>
+                        </div>
+                        <span class="text-sm font-semibold text-red-700">Thanh toán</span>
+                        <span class="text-xs text-gray-600">2 chỗ</span>
+                    </div>
+
+                    <!-- Table 11 -->
+                    <div onclick="selectTable(11)" class="table-item bg-orange-100 border-2 border-orange-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">11</span>
+                        </div>
+                        <span class="text-sm font-semibold text-orange-700">Có khách</span>
+                        <span class="text-xs text-gray-600">4 chỗ</span>
+                    </div>
+
+                    <!-- Table 12 -->
+                    <div onclick="selectTable(12)" class="table-item bg-green-100 border-2 border-green-300 rounded-xl p-4 cursor-pointer hover:shadow-lg transition-all duration-200 flex flex-col items-center justify-center">
+                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-2">
+                            <span class="text-white font-bold">12</span>
+                        </div>
+                        <span class="text-sm font-semibold text-green-700">Trống</span>
+                        <span class="text-xs text-gray-600">6 chỗ</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Panel -->
+            <div class="bg-white border-t border-gray-200 p-6 h-80">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-coffee">Menu nhanh</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="filterMenu('all')" class="category-btn active px-4 py-2 rounded-lg bg-coffee text-white text-sm font-semibold transition-colors">Tất cả</button>
+                        <button onclick="filterMenu('coffee')" class="category-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">Cà phê</button>
+                        <button onclick="filterMenu('tea')" class="category-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">Trà</button>
+                        <button onclick="filterMenu('food')" class="category-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">Bánh</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-4 lg:grid-cols-6 gap-3 h-[calc(100%-60px)] overflow-y-auto">
+                    <!-- Coffee Items -->
+                    <div onclick="addToOrder('Cà phê đen', 25000)" class="menu-item coffee bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Cà phê đen" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Cà phê đen</h4>
+                        <p class="text-xs text-coffee font-bold">25,000₫</p>
+                    </div>
+
+                    <div onclick="addToOrder('Cappuccino', 55000)" class="menu-item coffee bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Cappuccino" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Cappuccino</h4>
+                        <p class="text-xs text-coffee font-bold">55,000₫</p>
+                    </div>
+
+                    <div onclick="addToOrder('Latte', 50000)" class="menu-item coffee bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Latte" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Latte</h4>
+                        <p class="text-xs text-coffee font-bold">50,000₫</p>
+                    </div>
+
+                    <div onclick="addToOrder('Americano', 35000)" class="menu-item coffee bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1497636577773-f1231844b336?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Americano" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Americano</h4>
+                        <p class="text-xs text-coffee font-bold">35,000₫</p>
+                    </div>
+
+                    <!-- Tea Items -->
+                    <div onclick="addToOrder('Trà xanh', 30000)" class="menu-item tea bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Trà xanh" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Trà xanh</h4>
+                        <p class="text-xs text-coffee font-bold">30,000₫</p>
+                    </div>
+
+                    <div onclick="addToOrder('Trà đào', 40000)" class="menu-item tea bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Trà đào" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Trà đào</h4>
+                        <p class="text-xs text-coffee font-bold">40,000₫</p>
+                    </div>
+
+                    <!-- Food Items -->
+                    <div onclick="addToOrder('Bánh croissant', 30000)" class="menu-item food bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Bánh croissant" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Bánh croissant</h4>
+                        <p class="text-xs text-coffee font-bold">30,000₫</p>
+                    </div>
+
+                    <div onclick="addToOrder('Bánh muffin', 25000)" class="menu-item food bg-white border border-gray-200 rounded-lg p-3 cursor-pointer hover:shadow-md transition-all duration-200">
+                        <img src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Bánh muffin" class="w-full h-16 object-cover rounded-lg mb-2">
+                        <h4 class="text-sm font-semibold text-gray-800 mb-1">Bánh muffin</h4>
+                        <p class="text-xs text-coffee font-bold">25,000₫</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Order & Payment -->
+        <div class="w-96 bg-white border-l border-gray-200 flex flex-col">
+            <!-- Current Table Info -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-coffee">Bàn 05</h3>
+                        <p class="text-sm text-gray-600">4 chỗ ngồi • Đang phục vụ</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="clearOrder()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Xóa tất cả">
+                            <i class="fas fa-trash text-red-500"></i>
+                        </button>
+                        <button onclick="saveOrder()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors" title="Lưu đơn">
+                            <i class="fas fa-save text-blue-500"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <span>Thời gian: </span><span class="font-semibold">14:35</span>
+                    <span class="ml-4">Nhân viên: </span><span class="font-semibold">Minh Tuấn</span>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="flex-1 p-6 overflow-y-auto">
+                <h4 class="text-lg font-bold text-coffee mb-4">Hóa đơn tạm thời</h4>
+                <div id="orderItems" class="space-y-3">
+                    <!-- Order Item 1 -->
+                    <div class="order-item flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Cappuccino</h5>
+                            <p class="text-sm text-gray-600">55,000₫ x 1</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="decreaseQuantity(this)" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="quantity w-8 text-center font-semibold">1</span>
+                            <button onclick="increaseQuantity(this)" class="w-8 h-8 rounded-full bg-coffee hover:bg-coffee-dark text-white flex items-center justify-center transition-colors">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                            <button onclick="removeItem(this)" class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition-colors ml-2">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Order Item 2 -->
+                    <div class="order-item flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Bánh croissant</h5>
+                            <p class="text-sm text-gray-600">30,000₫ x 2</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="decreaseQuantity(this)" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="quantity w-8 text-center font-semibold">2</span>
+                            <button onclick="increaseQuantity(this)" class="w-8 h-8 rounded-full bg-coffee hover:bg-coffee-dark text-white flex items-center justify-center transition-colors">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                            <button onclick="removeItem(this)" class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition-colors ml-2">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden text-center py-8">
+                        <i class="fas fa-coffee text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">Chưa có món nào được chọn</p>
+                        <p class="text-sm text-gray-400">Chọn món từ menu bên dưới</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary & Payment -->
+            <div class="p-6 border-t border-gray-200">
+                <!-- Summary -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Tạm tính:</span>
+                        <span id="subtotal" class="font-semibold">115,000₫</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">VAT (10%):</span>
+                        <span id="tax" class="font-semibold">11,500₫</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Giảm giá:</span>
+                        <span id="discount" class="font-semibold text-green-600">-5,000₫</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-bold text-coffee border-t pt-3">
+                        <span>Tổng cộng:</span>
+                        <span id="total">121,500₫</span>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="space-y-3 mb-6">
+                    <h5 class="font-semibold text-gray-800">Phương thức thanh toán</h5>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="selectPaymentMethod('cash')" class="payment-method active p-3 border-2 border-coffee bg-coffee bg-opacity-10 rounded-lg text-center transition-colors">
+                            <i class="fas fa-money-bill-wave text-coffee mb-1"></i>
+                            <div class="text-xs font-semibold text-coffee">Tiền mặt</div>
+                        </button>
+                        <button onclick="selectPaymentMethod('card')" class="payment-method p-3 border-2 border-gray-300 rounded-lg text-center hover:border-coffee transition-colors">
+                            <i class="fas fa-credit-card text-gray-600 mb-1"></i>
+                            <div class="text-xs font-semibold text-gray-600">Thẻ</div>
+                        </button>
+                        <button onclick="selectPaymentMethod('qr')" class="payment-method p-3 border-2 border-gray-300 rounded-lg text-center hover:border-coffee transition-colors">
+                            <i class="fas fa-qrcode text-gray-600 mb-1"></i>
+                            <div class="text-xs font-semibold text-gray-600">QR Code</div>
+                        </button>
+                        <button onclick="selectPaymentMethod('transfer')" class="payment-method p-3 border-2 border-gray-300 rounded-lg text-center hover:border-coffee transition-colors">
+                            <i class="fas fa-university text-gray-600 mb-1"></i>
+                            <div class="text-xs font-semibold text-gray-600">Chuyển khoản</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+                    <button onclick="processPayment()" class="w-full bg-coffee hover:bg-coffee-dark text-white py-4 rounded-xl font-bold text-lg transition-colors">
+                        <i class="fas fa-cash-register mr-2"></i>Thanh toán
+                    </button>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="printBill()" class="bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                            <i class="fas fa-print mr-2"></i>In bill
+                        </button>
+                        <button onclick="holdOrder()" class="bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-xl font-semibold transition-colors">
+                            <i class="fas fa-pause mr-2"></i>Tạm giữ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shift History Modal -->
+    <div id="shiftModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-coffee">Lịch sử đơn hàng trong ca</h3>
+                    <button onclick="closeShiftModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6">
+                <!-- Shift Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-xl">
+                        <div class="text-2xl font-bold text-blue-600">23</div>
+                        <div class="text-sm text-gray-600">Đơn hàng</div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-xl">
+                        <div class="text-2xl font-bold text-green-600">1.2M</div>
+                        <div class="text-sm text-gray-600">Doanh thu</div>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-xl">
+                        <div class="text-2xl font-bold text-orange-600">52K</div>
+                        <div class="text-sm text-gray-600">TB/đơn</div>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl">
+                        <div class="text-2xl font-bold text-purple-600">6h 35m</div>
+                        <div class="text-sm text-gray-600">Thời gian</div>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div class="space-y-3">
+                    <h4 class="font-semibold text-gray-800">Danh sách đơn hàng</h4>
+                    <div class="max-h-96 overflow-y-auto space-y-2">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-xs font-bold">05</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">#ORD001</div>
+                                    <div class="text-xs text-gray-600">14:35 - Bàn 05</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-coffee">121,500₫</div>
+                                <div class="text-xs text-green-600">Hoàn thành</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-xs font-bold">03</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">#ORD002</div>
+                                    <div class="text-xs text-gray-600">14:20 - Bàn 03</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-coffee">85,000₫</div>
+                                <div class="text-xs text-green-600">Hoàn thành</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-xs font-bold">07</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">#ORD003</div>
+                                    <div class="text-xs text-gray-600">14:10 - Bàn 07</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-coffee">150,000₫</div>
+                                <div class="text-xs text-green-600">Hoàn thành</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Thanh toán thành công!</h3>
+                <p class="text-gray-600 mb-6">Đơn hàng #ORD001 đã được thanh toán</p>
+                <div class="space-y-3">
+                    <button onclick="printReceipt()" class="w-full bg-coffee hover:bg-coffee-dark text-white py-3 rounded-xl font-semibold transition-colors">
+                        <i class="fas fa-print mr-2"></i>In hóa đơn
+                    </button>
+                    <button onclick="closePaymentModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold transition-colors">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTable = 5;
+        let currentOrder = [
+            { name: 'Cappuccino', price: 55000, quantity: 1 },
+            { name: 'Bánh croissant', price: 30000, quantity: 2 }
+        ];
+        let selectedPaymentMethod = 'cash';
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN');
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Table selection
+        function selectTable(tableNumber) {
+            // Remove previous selection
+            document.querySelectorAll('.table-item').forEach(item => {
+                item.classList.remove('bg-blue-100', 'border-blue-500', 'shadow-lg');
+                const status = item.querySelector('span').textContent;
+                if (status === 'Trống') {
+                    item.classList.add('bg-green-100', 'border-green-300');
+                } else if (status === 'Có khách') {
+                    item.classList.add('bg-orange-100', 'border-orange-300');
+                } else if (status === 'Thanh toán') {
+                    item.classList.add('bg-red-100', 'border-red-300');
+                }
+            });
+
+            // Add selection to clicked table
+            const selectedTable = document.querySelector(`[onclick="selectTable(${tableNumber})"]`);
+            selectedTable.classList.remove('bg-green-100', 'border-green-300', 'bg-orange-100', 'border-orange-300', 'bg-red-100', 'border-red-300');
+            selectedTable.classList.add('bg-blue-100', 'border-blue-500', 'shadow-lg');
+            selectedTable.querySelector('span').textContent = 'Đang chọn';
+            selectedTable.querySelector('span').className = 'text-sm font-semibold text-blue-700';
+
+            currentTable = tableNumber;
+            updateTableInfo();
+        }
+
+        function updateTableInfo() {
+            const tableInfo = document.querySelector('.w-96 h3');
+            tableInfo.textContent = `Bàn ${currentTable.toString().padStart(2, '0')}`;
+        }
+
+        // Menu filtering
+        function filterMenu(category) {
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-coffee', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-coffee', 'text-white');
+
+            // Filter menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Order management
+        function addToOrder(itemName, price) {
+            const existingItem = currentOrder.find(item => item.name === itemName);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                currentOrder.push({ name: itemName, price: price, quantity: 1 });
+            }
+            updateOrderDisplay();
+            showNotification(`Đã thêm ${itemName} vào đơn hàng`, 'success');
+        }
+
+        function removeItem(button) {
+            const orderItem = button.closest('.order-item');
+            const itemName = orderItem.querySelector('h5').textContent;
+            currentOrder = currentOrder.filter(item => item.name !== itemName);
+            updateOrderDisplay();
+            showNotification(`Đã xóa ${itemName} khỏi đơn hàng`, 'info');
+        }
+
+        function increaseQuantity(button) {
+            const orderItem = button.closest('.order-item');
+            const itemName = orderItem.querySelector('h5').textContent;
+            const item = currentOrder.find(item => item.name === itemName);
+            if (item) {
+                item.quantity += 1;
+                updateOrderDisplay();
+            }
+        }
+
+        function decreaseQuantity(button) {
+            const orderItem = button.closest('.order-item');
+            const itemName = orderItem.querySelector('h5').textContent;
+            const item = currentOrder.find(item => item.name === itemName);
+            if (item && item.quantity > 1) {
+                item.quantity -= 1;
+                updateOrderDisplay();
+            }
+        }
+
+        function updateOrderDisplay() {
+            const orderItemsContainer = document.getElementById('orderItems');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (currentOrder.length === 0) {
+                orderItemsContainer.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                orderItemsContainer.innerHTML = currentOrder.map(item => `
+                    <div class="order-item flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">${item.name}</h5>
+                            <p class="text-sm text-gray-600">${item.price.toLocaleString()}₫ x ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="decreaseQuantity(this)" class="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition-colors">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="quantity w-8 text-center font-semibold">${item.quantity}</span>
+                            <button onclick="increaseQuantity(this)" class="w-8 h-8 rounded-full bg-coffee hover:bg-coffee-dark text-white flex items-center justify-center transition-colors">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                            <button onclick="removeItem(this)" class="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center transition-colors ml-2">
+                                <i class="fas fa-times text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            updateOrderSummary();
+        }
+
+        function updateOrderSummary() {
+            const subtotal = currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = Math.round(subtotal * 0.1);
+            const discount = 5000;
+            const total = subtotal + tax - discount;
+
+            document.getElementById('subtotal').textContent = subtotal.toLocaleString() + '₫';
+            document.getElementById('tax').textContent = tax.toLocaleString() + '₫';
+            document.getElementById('discount').textContent = '-' + discount.toLocaleString() + '₫';
+            document.getElementById('total').textContent = total.toLocaleString() + '₫';
+        }
+
+        function clearOrder() {
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả món trong đơn hàng?')) {
+                currentOrder = [];
+                updateOrderDisplay();
+                showNotification('Đã xóa tất cả món khỏi đơn hàng', 'info');
+            }
+        }
+
+        function saveOrder() {
+            showNotification('Đã lưu đơn hàng tạm thời', 'success');
+        }
+
+        // Payment methods
+        function selectPaymentMethod(method) {
+            document.querySelectorAll('.payment-method').forEach(btn => {
+                btn.classList.remove('border-coffee', 'bg-coffee', 'bg-opacity-10');
+                btn.classList.add('border-gray-300');
+                btn.querySelectorAll('i, div').forEach(el => {
+                    el.classList.remove('text-coffee');
+                    el.classList.add('text-gray-600');
+                });
+            });
+
+            event.target.closest('.payment-method').classList.remove('border-gray-300');
+            event.target.closest('.payment-method').classList.add('border-coffee', 'bg-coffee', 'bg-opacity-10');
+            event.target.closest('.payment-method').querySelectorAll('i, div').forEach(el => {
+                el.classList.remove('text-gray-600');
+                el.classList.add('text-coffee');
+            });
+
+            selectedPaymentMethod = method;
+        }
+
+        function processPayment() {
+            if (currentOrder.length === 0) {
+                showNotification('Vui lòng chọn món trước khi thanh toán', 'error');
+                return;
+            }
+
+            document.getElementById('paymentModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            
+            // Reset order after successful payment
+            currentOrder = [];
+            updateOrderDisplay();
+        }
+
+        function printBill() {
+            showNotification('Đang in bill tạm tính...', 'info');
+        }
+
+        function printReceipt() {
+            showNotification('Đang in hóa đơn...', 'info');
+            setTimeout(() => {
+                showNotification('Hóa đơn đã được in thành công!', 'success');
+                closePaymentModal();
+            }, 2000);
+        }
+
+        function holdOrder() {
+            showNotification('Đã tạm giữ đơn hàng', 'info');
+        }
+
+        // Shift management
+        function showShiftReport() {
+            document.getElementById('shiftModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeShiftModal() {
+            document.getElementById('shiftModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'} text-white`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        function logout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                alert('Đăng xuất thành công!');
+                window.location.href = '/login';
+            }
+        }
+
+        // Initialize
+        updateOrderDisplay();
+        selectTable(5);
+
+        // Close modals when clicking outside
+        document.getElementById('shiftModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShiftModal();
+            }
+        });
+
+        document.getElementById('paymentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePaymentModal();
+            }
+        });
+    </script>
+</body>
+</html>

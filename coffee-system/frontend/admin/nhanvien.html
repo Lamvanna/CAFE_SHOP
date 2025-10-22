@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý nhân viên | Coffee House Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee': '#6F4E37',
+                        'cream': '#F9F4EE',
+                        'coffee-light': '#8B6F47',
+                        'coffee-dark': '#5D3E2A'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-cream">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out" id="sidebar">
+        <!-- Logo -->
+        <div class="flex items-center justify-center h-16 bg-coffee">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                    <i class="fas fa-coffee text-coffee text-sm"></i>
+                </div>
+                <div class="text-white">
+                    <h1 class="text-lg font-bold">Coffee House</h1>
+                    <p class="text-xs text-gray-200">Admin Panel</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="mt-8">
+            <div class="px-4 space-y-2">
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-coffee hover:text-white transition-colors group">
+                    <i class="fas fa-home mr-3 group-hover:text-white"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-coffee hover:text-white transition-colors group">
+                    <i class="fas fa-utensils mr-3 group-hover:text-white"></i>
+                    <span>Quản lý món</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-coffee hover:text-white transition-colors group">
+                    <i class="fas fa-receipt mr-3 group-hover:text-white"></i>
+                    <span>Quản lý đơn hàng</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 bg-coffee text-white rounded-lg">
+                    <i class="fas fa-users mr-3"></i>
+                    <span>Quản lý nhân viên</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-coffee hover:text-white transition-colors group">
+                    <i class="fas fa-warehouse mr-3 group-hover:text-white"></i>
+                    <span>Quản lý kho</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-coffee hover:text-white transition-colors group">
+                    <i class="fas fa-chart-bar mr-3 group-hover:text-white"></i>
+                    <span>Thống kê</span>
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-coffee hover:text-white transition-colors group">
+                    <i class="fas fa-cog mr-3 group-hover:text-white"></i>
+                    <span>Cài đặt</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- User Info -->
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-200">
+            <div class="flex items-center space-x-3">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Admin" class="w-10 h-10 rounded-full">
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-gray-800">Admin</p>
+                    <p class="text-xs text-gray-600">Quản trị viên</p>
+                </div>
+                <button class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64">
+        <!-- Top Bar -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden text-gray-600 hover:text-gray-800 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">Quản lý nhân viên</h1>
+                        <p class="text-sm text-gray-600">Quản lý thông tin và quyền hạn nhân viên</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-600 hover:text-gray-800 transition-colors">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Admin" class="w-8 h-8 rounded-full">
+                            <span class="hidden md:block text-gray-700 font-medium">Admin</span>
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="p-4 sm:p-6 lg:p-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Tổng nhân viên</p>
+                            <p class="text-2xl font-bold text-gray-800">24</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">+2</span>
+                        <span class="text-gray-600 ml-1">so với tháng trước</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Đang làm việc</p>
+                            <p class="text-2xl font-bold text-gray-800">18</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user-check text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">75%</span>
+                        <span class="text-gray-600 ml-1">tỷ lệ có mặt</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Ca sáng</p>
+                            <p class="text-2xl font-bold text-gray-800">12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-sun text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-gray-600">6:00 - 14:00</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Ca tối</p>
+                            <p class="text-2xl font-bold text-gray-800">12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-moon text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center text-sm">
+                        <span class="text-gray-600">14:00 - 22:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters & Actions -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <!-- Search -->
+                        <div class="relative">
+                            <input type="text" id="searchEmployee" placeholder="Tìm kiếm nhân viên..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent w-full sm:w-64">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        
+                        <!-- Role Filter -->
+                        <select id="roleFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                            <option value="all">Tất cả vai trò</option>
+                            <option value="admin">Quản trị viên</option>
+                            <option value="manager">Quản lý</option>
+                            <option value="staff">Nhân viên</option>
+                            <option value="cashier">Thu ngân</option>
+                        </select>
+                        
+                        <!-- Shift Filter -->
+                        <select id="shiftFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                            <option value="all">Tất cả ca làm</option>
+                            <option value="morning">Ca sáng</option>
+                            <option value="evening">Ca tối</option>
+                            <option value="full">Cả ngày</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="exportEmployees()" class="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fas fa-download mr-2"></i>
+                            Xuất Excel
+                        </button>
+                        <button onclick="openAddEmployeeModal()" class="flex items-center px-6 py-2 bg-coffee text-white rounded-lg hover:bg-coffee-dark transition-colors font-semibold">
+                            <i class="fas fa-plus mr-2"></i>
+                            Thêm nhân viên
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Table -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    <input type="checkbox" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nhân viên</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Vai trò</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Ca làm</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Liên hệ</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Trạng thái</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <!-- Employee Row 1 -->
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Employee" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Nguyễn Thị Lan</p>
+                                            <p class="text-sm text-gray-600">@nguyenlan</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-crown mr-1"></i>Quản lý
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-gray-800">Ca sáng</p>
+                                        <p class="text-gray-600">6:00 - 14:00</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="text-gray-800">0123 456 789</p>
+                                        <p class="text-gray-600">lan@coffeehouse.vn</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-circle text-xs mr-1"></i>Đang làm
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="viewEmployee('EMP001')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="editEmployee('EMP001')" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteEmployee('EMP001')" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Employee Row 2 -->
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Employee" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Trần Văn Nam</p>
+                                            <p class="text-sm text-gray-600">@trannam</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-cash-register mr-1"></i>Thu ngân
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-gray-800">Ca tối</p>
+                                        <p class="text-gray-600">14:00 - 22:00</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="text-gray-800">0987 654 321</p>
+                                        <p class="text-gray-600">nam@coffeehouse.vn</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-circle text-xs mr-1"></i>Đang làm
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="viewEmployee('EMP002')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="editEmployee('EMP002')" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteEmployee('EMP002')" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Employee Row 3 -->
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Employee" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Lê Thị Hoa</p>
+                                            <p class="text-sm text-gray-600">@lehoa</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-user mr-1"></i>Nhân viên
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-gray-800">Ca sáng</p>
+                                        <p class="text-gray-600">6:00 - 14:00</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="text-gray-800">0369 258 147</p>
+                                        <p class="text-gray-600">hoa@coffeehouse.vn</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-circle text-xs mr-1"></i>Nghỉ phép
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="viewEmployee('EMP003')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="editEmployee('EMP003')" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteEmployee('EMP003')" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Employee Row 4 -->
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Employee" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Phạm Minh Tuấn</p>
+                                            <p class="text-sm text-gray-600">@phamtuan</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-user mr-1"></i>Nhân viên
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-gray-800">Ca tối</p>
+                                        <p class="text-gray-600">14:00 - 22:00</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="text-gray-800">0147 258 369</p>
+                                        <p class="text-gray-600">tuan@coffeehouse.vn</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-circle text-xs mr-1"></i>Nghỉ việc
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="viewEmployee('EMP004')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="editEmployee('EMP004')" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteEmployee('EMP004')" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Employee Row 5 -->
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <input type="checkbox" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-4">
+                                        <img src="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Employee" class="w-10 h-10 rounded-full">
+                                        <div>
+                                            <p class="font-semibold text-gray-800">Võ Thị Mai</p>
+                                            <p class="text-sm text-gray-600">@vomai</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-cash-register mr-1"></i>Thu ngân
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="font-semibold text-gray-800">Cả ngày</p>
+                                        <p class="text-gray-600">6:00 - 22:00</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm">
+                                        <p class="text-gray-800">0258 147 369</p>
+                                        <p class="text-gray-600">mai@coffeehouse.vn</p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                        <i class="fas fa-circle text-xs mr-1"></i>Đang làm
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <button onclick="viewEmployee('EMP005')" class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Xem chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button onclick="editEmployee('EMP005')" class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="deleteEmployee('EMP005')" class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                    <div class="flex flex-col sm:flex-row items-center justify-between">
+                        <div class="text-sm text-gray-600 mb-4 sm:mb-0">
+                            Hiển thị <strong>1-5</strong> trong tổng số <strong>24</strong> nhân viên
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="px-4 py-2 bg-coffee text-white rounded-lg font-semibold">1</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">2</button>
+                            <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">3</button>
+                            <button class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Employee Modal -->
+    <div id="employeeModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 id="modalTitle" class="text-xl font-bold text-gray-800">Thêm nhân viên mới</h3>
+                    <button onclick="closeEmployeeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <form id="employeeForm" class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Avatar Upload -->
+                    <div class="md:col-span-2 flex justify-center">
+                        <div class="relative">
+                            <img id="avatarPreview" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">
+                            <button type="button" onclick="document.getElementById('avatarInput').click()" class="absolute bottom-0 right-0 bg-coffee text-white p-2 rounded-full hover:bg-coffee-dark transition-colors">
+                                <i class="fas fa-camera text-sm"></i>
+                            </button>
+                            <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(this)">
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Info -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-user mr-2 text-coffee"></i>Họ và tên *
+                        </label>
+                        <input type="text" id="fullName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập họ và tên">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-at mr-2 text-coffee"></i>Tên đăng nhập *
+                        </label>
+                        <input type="text" id="username" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập tên đăng nhập">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2 text-coffee"></i>Email *
+                        </label>
+                        <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập email">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-phone mr-2 text-coffee"></i>Số điện thoại *
+                        </label>
+                        <input type="tel" id="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập số điện thoại">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-coffee"></i>Mật khẩu *
+                        </label>
+                        <input type="password" id="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập mật khẩu">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2 text-coffee"></i>Xác nhận mật khẩu *
+                        </label>
+                        <input type="password" id="confirmPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Xác nhận mật khẩu">
+                    </div>
+                    
+                    <!-- Work Info -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-user-tag mr-2 text-coffee"></i>Vai trò *
+                        </label>
+                        <select id="role" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                            <option value="">Chọn vai trò</option>
+                            <option value="admin">Quản trị viên</option>
+                            <option value="manager">Quản lý</option>
+                            <option value="staff">Nhân viên</option>
+                            <option value="cashier">Thu ngân</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-clock mr-2 text-coffee"></i>Ca làm việc *
+                        </label>
+                        <select id="shift" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                            <option value="">Chọn ca làm</option>
+                            <option value="morning">Ca sáng (6:00 - 14:00)</option>
+                            <option value="evening">Ca tối (14:00 - 22:00)</option>
+                            <option value="full">Cả ngày (6:00 - 22:00)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-calendar mr-2 text-coffee"></i>Ngày bắt đầu *
+                        </label>
+                        <input type="date" id="startDate" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-dollar-sign mr-2 text-coffee"></i>Lương cơ bản
+                        </label>
+                        <input type="number" id="salary" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập lương cơ bản">
+                    </div>
+                    
+                    <!-- Address -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-map-marker-alt mr-2 text-coffee"></i>Địa chỉ
+                        </label>
+                        <textarea id="address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent" placeholder="Nhập địa chỉ"></textarea>
+                    </div>
+                    
+                    <!-- Permissions -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-4">
+                            <i class="fas fa-key mr-2 text-coffee"></i>Phân quyền
+                        </label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="permMenu" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                    <span class="text-sm text-gray-700">Quản lý menu</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="permOrders" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                    <span class="text-sm text-gray-700">Quản lý đơn hàng</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="permInventory" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                    <span class="text-sm text-gray-700">Quản lý kho</span>
+                                </label>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="permReports" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                    <span class="text-sm text-gray-700">Xem báo cáo</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="permSettings" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                    <span class="text-sm text-gray-700">Cài đặt hệ thống</span>
+                                </label>
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" id="permEmployees" class="rounded border-gray-300 text-coffee focus:ring-coffee">
+                                    <span class="text-sm text-gray-700">Quản lý nhân viên</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-8 pt-6 border-t border-gray-200">
+                    <button type="submit" class="flex-1 bg-coffee text-white py-3 px-6 rounded-lg font-semibold hover:bg-coffee-dark transition-colors">
+                        <i class="fas fa-save mr-2"></i>Lưu thông tin
+                    </button>
+                    <button type="button" onclick="closeEmployeeModal()" class="flex-1 border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-times mr-2"></i>Hủy bỏ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Employee Detail Modal -->
+    <div id="employeeDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Thông tin nhân viên</h3>
+                    <button onclick="closeEmployeeDetailModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="employeeDetailContent" class="p-6">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        }
+
+        // Toggle user menu
+        function toggleUserMenu() {
+            // Implementation for user menu toggle
+        }
+
+        // Open add employee modal
+        function openAddEmployeeModal() {
+            document.getElementById('modalTitle').textContent = 'Thêm nhân viên mới';
+            document.getElementById('employeeForm').reset();
+            document.getElementById('employeeModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close employee modal
+        function closeEmployeeModal() {
+            document.getElementById('employeeModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close employee detail modal
+        function closeEmployeeDetailModal() {
+            document.getElementById('employeeDetailModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Preview avatar
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // View employee details
+        function viewEmployee(employeeId) {
+            const employees = {
+                'EMP001': {
+                    id: 'EMP001',
+                    name: 'Nguyễn Thị Lan',
+                    username: 'nguyenlan',
+                    email: 'lan@coffeehouse.vn',
+                    phone: '0123 456 789',
+                    role: 'Quản lý',
+                    shift: 'Ca sáng (6:00 - 14:00)',
+                    status: 'Đang làm',
+                    startDate: '15/01/2023',
+                    salary: '15,000,000 VNĐ',
+                    address: '123 Nguyễn Văn Linh, Quận 7, TP.HCM',
+                    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80'
+                }
+            };
+            
+            const employee = employees[employeeId] || employees['EMP001'];
+            
+            document.getElementById('employeeDetailContent').innerHTML = `
+                <div class="space-y-6">
+                    <!-- Header -->
+                    <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                        <img src="${employee.avatar}" alt="${employee.name}" class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">
+                        <div class="text-center md:text-left">
+                            <h4 class="text-2xl font-bold text-gray-800">${employee.name}</h4>
+                            <p class="text-gray-600 mb-2">@${employee.username}</p>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                <i class="fas fa-crown mr-1"></i>${employee.role}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Info Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <h5 class="font-semibold text-gray-800 border-b border-gray-200 pb-2">Thông tin cá nhân</h5>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-envelope text-coffee w-5"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Email</p>
+                                        <p class="font-semibold">${employee.email}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-phone text-coffee w-5"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Số điện thoại</p>
+                                        <p class="font-semibold">${employee.phone}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-map-marker-alt text-coffee w-5 mt-1"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Địa chỉ</p>
+                                        <p class="font-semibold">${employee.address}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h5 class="font-semibold text-gray-800 border-b border-gray-200 pb-2">Thông tin công việc</h5>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-clock text-coffee w-5"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Ca làm việc</p>
+                                        <p class="font-semibold">${employee.shift}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-calendar text-coffee w-5"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Ngày bắt đầu</p>
+                                        <p class="font-semibold">${employee.startDate}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-dollar-sign text-coffee w-5"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Lương cơ bản</p>
+                                        <p class="font-semibold">${employee.salary}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-circle text-coffee w-5"></i>
+                                    <div>
+                                        <p class="text-sm text-gray-600">Trạng thái</p>
+                                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                            ${employee.status}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200">
+                        <button onclick="editEmployee('${employee.id}')" class="flex-1 bg-coffee text-white py-3 px-6 rounded-lg font-semibold hover:bg-coffee-dark transition-colors">
+                            <i class="fas fa-edit mr-2"></i>Chỉnh sửa thông tin
+                        </button>
+                        <button onclick="closeEmployeeDetailModal()" class="flex-1 border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-times mr-2"></i>Đóng
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('employeeDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Edit employee
+        function editEmployee(employeeId) {
+            document.getElementById('modalTitle').textContent = 'Chỉnh sửa thông tin nhân viên';
+            // Load employee data into form
+            // Implementation for loading existing data
+            closeEmployeeDetailModal();
+            document.getElementById('employeeModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Delete employee
+        function deleteEmployee(employeeId) {
+            if (confirm('Bạn có chắc chắn muốn xóa nhân viên này?')) {
+                showNotification('Đang xóa nhân viên...', 'info');
+                setTimeout(() => {
+                    showNotification('Đã xóa nhân viên thành công!', 'success');
+                    // Reload or update UI
+                }, 2000);
+            }
+        }
+
+        // Export employees
+        function exportEmployees() {
+            showNotification('Đang xuất danh sách nhân viên...', 'info');
+            setTimeout(() => {
+                showNotification('Đã xuất file Excel thành công!', 'success');
+            }, 2000);
+        }
+
+        // Form submission
+        document.getElementById('employeeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showNotification('Mật khẩu xác nhận không khớp!', 'error');
+                return;
+            }
+            
+            showNotification('Đang lưu thông tin nhân viên...', 'info');
+            setTimeout(() => {
+                showNotification('Đã lưu thông tin nhân viên thành công!', 'success');
+                closeEmployeeModal();
+                // Reload or update UI
+            }, 2000);
+        });
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'} text-white`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('employeeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmployeeModal();
+            }
+        });
+
+        document.getElementById('employeeDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEmployeeDetailModal();
+            }
+        });
+
+        // Search and filter functionality
+        document.getElementById('searchEmployee').addEventListener('input', function() {
+            // Implementation for search
+        });
+
+        document.getElementById('roleFilter').addEventListener('change', function() {
+            // Implementation for role filter
+        });
+
+        document.getElementById('shiftFilter').addEventListener('change', function() {
+            // Implementation for shift filter
+        });
+
+        // Set default start date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+        });
+    </script>
+</body>
+</html>

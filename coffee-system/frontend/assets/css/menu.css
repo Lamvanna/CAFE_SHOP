@@ -1,0 +1,40 @@
+/* Menu styles */
+.menu {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.menu-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.menu-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.menu-item h3 {
+    margin-top: 0;
+}
+
+.menu-item p {
+    color: #666;
+}
+
+.product-details {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.product-info {
+    display: flex;
+    gap: 2rem;
+}
+
+.product-info img {
+    max-width: 300px;
+}

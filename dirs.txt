@@ -1,0 +1,13 @@
+coffee-system\frontend\admin
+coffee-system\frontend\assets\css
+coffee-system\frontend\assets\js
+coffee-system\frontend\assets\js\ui
+coffee-system\frontend\assets\js\admin
+coffee-system\frontend\assets\images
+coffee-system\frontend\assets\images\products
+coffee-system\frontend\assets\images\icons
+coffee-system\frontend\components
+coffee-system\backend\routes
+coffee-system\backend\controllers
+coffee-system\backend\models
+coffee-system\backend\config

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử đơn hàng | Coffee House</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee': '#6F4E37',
+                        'cream': '#F9F4EE',
+                        'coffee-light': '#8B6F47',
+                        'coffee-dark': '#5D3E2A'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-cream">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-coffee rounded-full flex items-center justify-center">
+                        <i class="fas fa-coffee text-white text-lg md:text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold text-coffee">Coffee House</h1>
+                        <p class="text-xs text-gray-600 hidden md:block">Hương vị đậm đà</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center space-x-8">
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors font-medium">Trang chủ</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors font-medium">Menu</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors font-medium">Đặt bàn</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors font-medium">Khuyến mãi</a>
+                    <a href="#" class="text-gray-700 hover:text-coffee transition-colors font-medium">Liên hệ</a>
+                </nav>
+
+                <!-- Search Bar -->
+                <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                    <div class="relative w-full">
+                        <input type="text" placeholder="Tìm kiếm món..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Cart -->
+                    <button class="relative p-2 text-gray-700 hover:text-coffee transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-coffee text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </button>
+
+                    <!-- User Menu -->
+                    <div class="relative">
+                        <button onclick="toggleUserMenu()" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User" class="w-8 h-8 rounded-full">
+                            <span class="hidden md:block text-gray-700 font-medium">Minh Tuấn</span>
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </button>
+                        
+                        <!-- User Dropdown -->
+                        <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden">
+                            <div class="py-2">
+                                <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-user mr-3"></i>Thông tin cá nhân
+                                </a>
+                                <a href="#" class="flex items-center px-4 py-2 text-coffee bg-coffee bg-opacity-10 font-semibold">
+                                    <i class="fas fa-history mr-3"></i>Lịch sử đơn hàng
+                                </a>
+                                <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-heart mr-3"></i>Món yêu thích
+                                </a>
+                                <hr class="my-2">
+                                <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
+                                    <i class="fas fa-sign-out-alt mr-3"></i>Đăng xuất
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-gray-700 hover:text-coffee transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="lg:hidden bg-white border-t border-gray-200 hidden">
+            <div class="px-4 py-4 space-y-4">
+                <!-- Mobile Search -->
+                <div class="relative">
+                    <input type="text" placeholder="Tìm kiếm món..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <!-- Mobile Navigation -->
+                <nav class="space-y-2">
+                    <a href="#" class="block py-2 text-gray-700 hover:text-coffee transition-colors font-medium">Trang chủ</a>
+                    <a href="#" class="block py-2 text-gray-700 hover:text-coffee transition-colors font-medium">Menu</a>
+                    <a href="#" class="block py-2 text-gray-700 hover:text-coffee transition-colors font-medium">Đặt bàn</a>
+                    <a href="#" class="block py-2 text-gray-700 hover:text-coffee transition-colors font-medium">Khuyến mãi</a>
+                    <a href="#" class="block py-2 text-gray-700 hover:text-coffee transition-colors font-medium">Liên hệ</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+                <a href="#" class="hover:text-coffee transition-colors">Trang chủ</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-coffee font-medium">Lịch sử đơn hàng</span>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-bold text-coffee mb-2">Lịch sử đơn hàng</h1>
+            <p class="text-gray-600">Xem lại các đơn hàng bạn đã đặt</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <!-- Status Filter -->
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterOrders('all')" class="filter-btn active px-4 py-2 rounded-full bg-coffee text-white font-semibold transition-colors">
+                        Tất cả
+                    </button>
+                    <button onclick="filterOrders('processing')" class="filter-btn px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold transition-colors">
+                        Đang xử lý
+                    </button>
+                    <button onclick="filterOrders('completed')" class="filter-btn px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold transition-colors">
+                        Hoàn tất
+                    </button>
+                    <button onclick="filterOrders('cancelled')" class="filter-btn px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold transition-colors">
+                        Đã hủy
+                    </button>
+                </div>
+
+                <!-- Date Range -->
+                <div class="flex items-center space-x-4">
+                    <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                        <option>30 ngày qua</option>
+                        <option>7 ngày qua</option>
+                        <option>Tháng này</option>
+                        <option>Tháng trước</option>
+                        <option>Tùy chọn</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="space-y-6">
+            <!-- Order Card 1 -->
+            <div class="order-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow" data-status="completed">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                    <!-- Order Info -->
+                    <div class="flex-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800 mb-1">#DH001234</h3>
+                                <p class="text-sm text-gray-600">Đặt ngày: 15/12/2024 - 08:30</p>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
+                                    <i class="fas fa-check-circle mr-1"></i>Hoàn tất
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Preview -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex -space-x-2">
+                                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Coffee" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                                <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Coffee" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                                <div class="w-12 h-12 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-sm font-semibold text-gray-600">+2</div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Cappuccino, Latte và 2 món khác</p>
+                                <p class="text-lg font-bold text-coffee">285.000đ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button onclick="viewOrderDetail('DH001234')" class="px-4 py-2 border border-coffee text-coffee hover:bg-coffee hover:text-white rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                        </button>
+                        <button onclick="reorderItems('DH001234')" class="px-4 py-2 bg-coffee text-white hover:bg-coffee-dark rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-redo mr-2"></i>Đặt lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Card 2 -->
+            <div class="order-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow" data-status="processing">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                    <!-- Order Info -->
+                    <div class="flex-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800 mb-1">#DH001235</h3>
+                                <p class="text-sm text-gray-600">Đặt ngày: 16/12/2024 - 14:15</p>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-semibold rounded-full">
+                                    <i class="fas fa-clock mr-1"></i>Đang xử lý
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Preview -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex -space-x-2">
+                                <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Coffee" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Cake" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Americano, Bánh croissant</p>
+                                <p class="text-lg font-bold text-coffee">125.000đ</p>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                                <span>Tiến độ đơn hàng</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button onclick="viewOrderDetail('DH001235')" class="px-4 py-2 border border-coffee text-coffee hover:bg-coffee hover:text-white rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                        </button>
+                        <button onclick="cancelOrder('DH001235')" class="px-4 py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-times mr-2"></i>Hủy đơn
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Card 3 -->
+            <div class="order-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow" data-status="cancelled">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                    <!-- Order Info -->
+                    <div class="flex-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800 mb-1">#DH001233</h3>
+                                <p class="text-sm text-gray-600">Đặt ngày: 14/12/2024 - 16:45</p>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                                <span class="px-3 py-1 bg-red-100 text-red-800 text-sm font-semibold rounded-full">
+                                    <i class="fas fa-times-circle mr-1"></i>Đã hủy
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Preview -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex -space-x-2">
+                                <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Coffee" class="w-12 h-12 rounded-full border-2 border-white object-cover opacity-50">
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Espresso</p>
+                                <p class="text-lg font-bold text-gray-500 line-through">45.000đ</p>
+                            </div>
+                        </div>
+
+                        <!-- Cancel Reason -->
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                            <p class="text-sm text-red-700">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Lý do hủy: Khách hàng thay đổi ý định
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button onclick="viewOrderDetail('DH001233')" class="px-4 py-2 border border-coffee text-coffee hover:bg-coffee hover:text-white rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                        </button>
+                        <button onclick="reorderItems('DH001233')" class="px-4 py-2 bg-coffee text-white hover:bg-coffee-dark rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-redo mr-2"></i>Đặt lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Card 4 -->
+            <div class="order-card bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow" data-status="completed">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                    <!-- Order Info -->
+                    <div class="flex-1">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800 mb-1">#DH001232</h3>
+                                <p class="text-sm text-gray-600">Đặt ngày: 13/12/2024 - 09:20</p>
+                            </div>
+                            <div class="flex items-center space-x-2 mt-2 sm:mt-0">
+                                <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
+                                    <i class="fas fa-check-circle mr-1"></i>Hoàn tất
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Preview -->
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex -space-x-2">
+                                <img src="https://images.unsplash.com/photo-1497636577773-f1231844b336?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Smoothie" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Cake" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Coffee" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Sinh tố xoài, Bánh tiramisu, Cappuccino</p>
+                                <p class="text-lg font-bold text-coffee">195.000đ</p>
+                            </div>
+                        </div>
+
+                        <!-- Rating -->
+                        <div class="flex items-center space-x-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-sm text-gray-600">Đã đánh giá</span>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                        <button onclick="viewOrderDetail('DH001232')" class="px-4 py-2 border border-coffee text-coffee hover:bg-coffee hover:text-white rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                        </button>
+                        <button onclick="reorderItems('DH001232')" class="px-4 py-2 bg-coffee text-white hover:bg-coffee-dark rounded-lg font-semibold transition-colors">
+                            <i class="fas fa-redo mr-2"></i>Đặt lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-center mt-12">
+            <div class="flex items-center space-x-2">
+                <button class="px-3 py-2 border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="px-4 py-2 bg-coffee text-white rounded-lg font-semibold">1</button>
+                <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">2</button>
+                <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">3</button>
+                <span class="px-2 text-gray-500">...</span>
+                <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">10</button>
+                <button class="px-3 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Order Detail Modal -->
+    <div id="orderDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-gray-800">Chi tiết đơn hàng #DH001234</h3>
+                    <button onclick="closeOrderDetail()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <!-- Order Status -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <p class="text-sm text-gray-600">Ngày đặt: 15/12/2024 - 08:30</p>
+                        <p class="text-sm text-gray-600">Phương thức: Thanh toán online</p>
+                    </div>
+                    <span class="px-4 py-2 bg-green-100 text-green-800 font-semibold rounded-full">
+                        <i class="fas fa-check-circle mr-2"></i>Hoàn tất
+                    </span>
+                </div>
+
+                <!-- Order Items -->
+                <div class="space-y-4 mb-6">
+                    <h4 class="font-semibold text-gray-800">Món đã đặt:</h4>
+                    
+                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Cappuccino" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Cappuccino</h5>
+                            <p class="text-sm text-gray-600">Size: Vừa, Đá: Ít</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-gray-800">x2</p>
+                            <p class="text-coffee font-bold">120.000đ</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Latte" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Latte</h5>
+                            <p class="text-sm text-gray-600">Size: Lớn, Sữa: Sữa yến mạch</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-gray-800">x1</p>
+                            <p class="text-coffee font-bold">75.000đ</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Croissant" class="w-16 h-16 rounded-lg object-cover">
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-gray-800">Bánh Croissant</h5>
+                            <p class="text-sm text-gray-600">Nhân bơ tỏi</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-gray-800">x2</p>
+                            <p class="text-coffee font-bold">70.000đ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="border-t border-gray-200 pt-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Tạm tính:</span>
+                            <span>265.000đ</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Phí giao hàng:</span>
+                            <span>20.000đ</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>VAT (8%):</span>
+                            <span>22.800đ</span>
+                        </div>
+                        <div class="flex justify-between text-red-600">
+                            <span>Giảm giá:</span>
+                            <span>-22.800đ</span>
+                        </div>
+                        <hr class="my-2">
+                        <div class="flex justify-between text-lg font-bold text-coffee">
+                            <span>Tổng cộng:</span>
+                            <span>285.000đ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Info -->
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <h5 class="font-semibold text-gray-800 mb-2">Thông tin giao hàng:</h5>
+                    <p class="text-sm text-gray-600">Minh Tuấn - 0123 456 789</p>
+                    <p class="text-sm text-gray-600">123 Nguyễn Văn Linh, Quận 7, TP.HCM</p>
+                    <p class="text-sm text-gray-600">Ghi chú: Giao tận tay, gọi trước 5 phút</p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
+                    <button onclick="reorderItems('DH001234')" class="flex-1 bg-coffee text-white py-3 rounded-xl font-semibold hover:bg-coffee-dark transition-colors">
+                        <i class="fas fa-redo mr-2"></i>Đặt lại món này
+                    </button>
+                    <button onclick="downloadInvoice('DH001234')" class="flex-1 border border-coffee text-coffee py-3 rounded-xl font-semibold hover:bg-coffee hover:text-white transition-colors">
+                        <i class="fas fa-download mr-2"></i>Tải hóa đơn
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-coffee text-white mt-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                            <i class="fas fa-coffee text-coffee text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">Coffee House</h3>
+                            <p class="text-sm text-gray-300">Hương vị đậm đà</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Mang đến cho bạn những ly cà phê tuyệt vời nhất với không gian ấm cúng và dịch vụ tận tâm.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Liên kết nhanh</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Trang chủ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Menu</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Đặt bàn</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Khuyến mãi</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors text-sm">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Thông tin liên hệ</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-map-marker-alt text-gray-300"></i>
+                            <span class="text-gray-300 text-sm">123 Nguyễn Văn Linh, Quận 7, TP.HCM</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-gray-300"></i>
+                            <span class="text-gray-300 text-sm">0123 456 789</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-gray-300"></i>
+                            <span class="text-gray-300 text-sm">info@coffeehouse.vn</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-gray-300"></i>
+                            <span class="text-gray-300 text-sm">6:00 - 22:00 (Hàng ngày)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Kết nối với chúng tôi</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-facebook-f text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-youtube text-white"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition-colors">
+                            <i class="fab fa-tiktok text-white"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-300 text-sm">Theo dõi chúng tôi để cập nhật những ưu đãi mới nhất!</p>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-600 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
+                <p class="text-gray-300 text-sm">
+                    © 2024 Coffee House. Tất cả quyền được bảo lưu.
+                </p>
+                <div class="flex items-center space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-300 hover:text-white text-sm transition-colors">Chính sách bảo mật</a>
+                    <a href="#" class="text-gray-300 hover:text-white text-sm transition-colors">Điều khoản sử dụng</a>
+                    <a href="#" class="text-gray-300 hover:text-white text-sm transition-colors">Hỗ trợ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Toggle user menu
+        function toggleUserMenu() {
+            const userMenu = document.getElementById('userMenu');
+            userMenu.classList.toggle('hidden');
+        }
+
+        // Filter orders
+        function filterOrders(status) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-coffee', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-coffee', 'text-white');
+
+            // Show/hide order cards
+            const orderCards = document.querySelectorAll('.order-card');
+            orderCards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // View order detail
+        function viewOrderDetail(orderId) {
+            document.getElementById('orderDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close order detail modal
+        function closeOrderDetail() {
+            document.getElementById('orderDetailModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Reorder items
+        function reorderItems(orderId) {
+            showNotification('Đã thêm các món vào giỏ hàng!', 'success');
+        }
+
+        // Cancel order
+        function cancelOrder(orderId) {
+            if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+                showNotification('Đơn hàng đã được hủy thành công!', 'success');
+                // Update order status in UI
+                const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+                if (orderCard) {
+                    // Update status badge and other elements
+                }
+            }
+        }
+
+        // Download invoice
+        function downloadInvoice(orderId) {
+            showNotification('Đang tải hóa đơn...', 'info');
+            // Simulate download
+            setTimeout(() => {
+                showNotification('Hóa đơn đã được tải xuống!', 'success');
+            }, 2000);
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'} text-white`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.getElementById('userMenu');
+            const userButton = event.target.closest('[onclick="toggleUserMenu()"]');
+            
+            if (!userButton && !userMenu.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('orderDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeOrderDetail();
+            }
+        });
+    </script>
+</body>
+</html>

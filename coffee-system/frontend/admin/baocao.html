@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê & Báo cáo | Coffee House Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee': '#6F4E37',
+                        'cream': '#F9F4EE',
+                        'coffee-light': '#8B6F47',
+                        'coffee-dark': '#5D3E2A'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-cream">
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <div class="w-64 bg-white shadow-lg border-r border-gray-200">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-coffee rounded-full flex items-center justify-center">
+                        <i class="fas fa-coffee text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-coffee">Coffee House</h1>
+                        <p class="text-xs text-gray-600">Management System</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="p-4 space-y-2">
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-home text-gray-600"></i>
+                    <span class="text-gray-700">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-utensils text-gray-600"></i>
+                    <span class="text-gray-700">Quản lý món</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-receipt text-gray-600"></i>
+                    <span class="text-gray-700">Quản lý đơn hàng</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-users text-gray-600"></i>
+                    <span class="text-gray-700">Quản lý nhân viên</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg bg-coffee bg-opacity-10 border-r-4 border-coffee">
+                    <i class="fas fa-chart-bar text-coffee"></i>
+                    <span class="text-coffee font-semibold">Thống kê</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-warehouse text-gray-600"></i>
+                    <span class="text-gray-700">Quản lý kho</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-cog text-gray-600"></i>
+                    <span class="text-gray-700">Cài đặt</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-coffee">Thống kê & Báo cáo</h1>
+                        <p class="text-gray-600">Phân tích dữ liệu kinh doanh</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Date Range Picker -->
+                        <div class="flex items-center space-x-2">
+                            <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coffee focus:border-transparent">
+                                <option>Hôm nay</option>
+                                <option>7 ngày qua</option>
+                                <option>30 ngày qua</option>
+                                <option>Tháng này</option>
+                                <option>Tùy chọn</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Export Buttons -->
+                        <div class="flex items-center space-x-2">
+                            <button onclick="exportPDF()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                                <i class="fas fa-file-pdf mr-2"></i>PDF
+                            </button>
+                            <button onclick="exportExcel()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                                <i class="fas fa-file-excel mr-2"></i>Excel
+                            </button>
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-3">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Admin" class="w-10 h-10 rounded-full">
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">Admin</p>
+                                <p class="text-xs text-gray-600">Quản trị viên</p>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600 transition-colors">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Overview Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">Tổng doanh thu</p>
+                                <p class="text-2xl font-bold text-coffee">15.2M</p>
+                                <p class="text-sm text-green-600 mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>+12.5%
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-coffee bg-opacity-10 rounded-full flex items-center justify-center">
+                                <i class="fas fa-dollar-sign text-coffee text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">Số đơn hàng</p>
+                                <p class="text-2xl font-bold text-coffee">1,247</p>
+                                <p class="text-sm text-green-600 mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>+8.2%
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-receipt text-blue-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">Trung bình/đơn</p>
+                                <p class="text-2xl font-bold text-coffee">122K</p>
+                                <p class="text-sm text-red-600 mt-1">
+                                    <i class="fas fa-arrow-down mr-1"></i>-2.1%
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-chart-line text-orange-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-1">Khách hàng mới</p>
+                                <p class="text-2xl font-bold text-coffee">89</p>
+                                <p class="text-sm text-green-600 mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i>+15.3%
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-users text-purple-600 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Revenue Chart -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-gray-800">Doanh thu theo ngày</h3>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="changeChartPeriod('day')" class="chart-period-btn active px-3 py-1 rounded-lg bg-coffee text-white text-sm font-semibold transition-colors">Ngày</button>
+                                <button onclick="changeChartPeriod('week')" class="chart-period-btn px-3 py-1 rounded-lg bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">Tuần</button>
+                                <button onclick="changeChartPeriod('month')" class="chart-period-btn px-3 py-1 rounded-lg bg-gray-100 text-gray-700 text-sm font-semibold hover:bg-gray-200 transition-colors">Tháng</button>
+                            </div>
+                        </div>
+                        <div class="h-80 overflow-hidden">
+                            <canvas id="revenueChart" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Orders Chart -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-gray-800">Phân bố đơn hàng theo giờ</h3>
+                        </div>
+                        <div class="h-80 overflow-hidden">
+                            <canvas id="ordersChart" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Products & Staff -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Top Products -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-gray-800">Top món bán chạy</h3>
+                            <button class="text-coffee hover:text-coffee-dark transition-colors">
+                                <i class="fas fa-external-link-alt"></i>
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                                        <span class="text-yellow-600 font-bold text-lg">1</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Cappuccino</h4>
+                                        <p class="text-sm text-gray-600">Cà phê</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">342 ly</p>
+                                    <p class="text-sm text-gray-600">18.2M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <span class="text-gray-600 font-bold text-lg">2</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Latte</h4>
+                                        <p class="text-sm text-gray-600">Cà phê</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">298 ly</p>
+                                    <p class="text-sm text-gray-600">14.9M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                        <span class="text-orange-600 font-bold text-lg">3</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Americano</h4>
+                                        <p class="text-sm text-gray-600">Cà phê</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">256 ly</p>
+                                    <p class="text-sm text-gray-600">8.96M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <span class="text-gray-600 font-bold text-lg">4</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Trà đào</h4>
+                                        <p class="text-sm text-gray-600">Trà</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">189 ly</p>
+                                    <p class="text-sm text-gray-600">7.56M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <span class="text-gray-600 font-bold text-lg">5</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Bánh croissant</h4>
+                                        <p class="text-sm text-gray-600">Bánh</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">156 cái</p>
+                                    <p class="text-sm text-gray-600">4.68M</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Staff -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-gray-800">Top nhân viên xuất sắc</h3>
+                            <button class="text-coffee hover:text-coffee-dark transition-colors">
+                                <i class="fas fa-external-link-alt"></i>
+                            </button>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Staff" class="w-12 h-12 rounded-full">
+                                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-xs">1</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Minh Tuấn</h4>
+                                        <p class="text-sm text-gray-600">Nhân viên bán hàng</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">156 đơn</p>
+                                    <p class="text-sm text-gray-600">8.2M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Staff" class="w-12 h-12 rounded-full">
+                                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-xs">2</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Thu Hà</h4>
+                                        <p class="text-sm text-gray-600">Nhân viên bán hàng</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">142 đơn</p>
+                                    <p class="text-sm text-gray-600">7.8M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Staff" class="w-12 h-12 rounded-full">
+                                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-xs">3</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Văn Nam</h4>
+                                        <p class="text-sm text-gray-600">Nhân viên bán hàng</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">128 đơn</p>
+                                    <p class="text-sm text-gray-600">6.9M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Staff" class="w-12 h-12 rounded-full">
+                                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-xs">4</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Lan Anh</h4>
+                                        <p class="text-sm text-gray-600">Nhân viên bán hàng</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">115 đơn</p>
+                                    <p class="text-sm text-gray-600">6.2M</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center space-x-4">
+                                    <div class="relative">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Staff" class="w-12 h-12 rounded-full">
+                                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold text-xs">5</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Đức Anh</h4>
+                                        <p class="text-sm text-gray-600">Nhân viên bán hàng</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-coffee">98 đơn</p>
+                                    <p class="text-sm text-gray-600">5.1M</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Analytics -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Category Performance -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-6">Hiệu suất theo danh mục</h3>
+                        <div class="h-64 overflow-hidden">
+                            <canvas id="categoryChart" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Customer Satisfaction -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-6">Đánh giá khách hàng</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">5 sao</span>
+                                <div class="flex-1 mx-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 68%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-sm font-semibold">68%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">4 sao</span>
+                                <div class="flex-1 mx-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 22%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-sm font-semibold">22%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">3 sao</span>
+                                <div class="flex-1 mx-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 7%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-sm font-semibold">7%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">2 sao</span>
+                                <div class="flex-1 mx-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-orange-500 h-2 rounded-full" style="width: 2%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-sm font-semibold">2%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">1 sao</span>
+                                <div class="flex-1 mx-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-red-500 h-2 rounded-full" style="width: 1%"></div>
+                                    </div>
+                                </div>
+                                <span class="text-sm font-semibold">1%</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 p-4 bg-green-50 rounded-lg">
+                            <div class="flex items-center justify-center space-x-2">
+                                <div class="text-2xl font-bold text-green-600">4.6</div>
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                            <p class="text-center text-sm text-gray-600 mt-1">Điểm trung bình</p>
+                        </div>
+                    </div>
+
+                    <!-- Peak Hours -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-6">Giờ cao điểm</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-clock text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">08:00 - 10:00</p>
+                                        <p class="text-sm text-gray-600">Sáng</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-red-600">89%</p>
+                                    <p class="text-xs text-gray-600">Công suất</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-200">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-clock text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">12:00 - 14:00</p>
+                                        <p class="text-sm text-gray-600">Trưa</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-orange-600">76%</p>
+                                    <p class="text-xs text-gray-600">Công suất</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-clock text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">18:00 - 20:00</p>
+                                        <p class="text-sm text-gray-600">Tối</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-yellow-600">65%</p>
+                                    <p class="text-xs text-gray-600">Công suất</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-clock text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">14:00 - 16:00</p>
+                                        <p class="text-sm text-gray-600">Chiều</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-green-600">45%</p>
+                                    <p class="text-xs text-gray-600">Công suất</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Export Success Modal -->
+    <div id="exportModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-download text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Xuất báo cáo thành công!</h3>
+                <p class="text-gray-600 mb-6">File báo cáo đã được tải xuống</p>
+                <button onclick="closeExportModal()" class="w-full bg-coffee hover:bg-coffee-dark text-white py-3 rounded-xl font-semibold transition-colors">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart configurations
+        const chartColors = {
+            primary: '#6F4E37',
+            secondary: '#8B6F47',
+            success: '#10B981',
+            warning: '#F59E0B',
+            danger: '#EF4444',
+            info: '#3B82F6'
+        };
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: [1200000, 1500000, 1800000, 2100000, 2400000, 2200000, 1900000],
+                    borderColor: chartColors.primary,
+                    backgroundColor: chartColors.primary + '20',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Orders Chart
+        const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+        const ordersChart = new Chart(ordersCtx, {
+            type: 'bar',
+            data: {
+                labels: ['6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h'],
+                datasets: [{
+                    label: 'Số đơn hàng',
+                    data: [12, 45, 67, 89, 56, 34, 78, 45, 23],
+                    backgroundColor: chartColors.info,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Category Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cà phê', 'Trà', 'Bánh', 'Nước ép'],
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        chartColors.primary,
+                        chartColors.success,
+                        chartColors.warning,
+                        chartColors.info
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart period change
+        function changeChartPeriod(period) {
+            // Update active button
+            document.querySelectorAll('.chart-period-btn').forEach(btn => {
+                btn.classList.remove('bg-coffee', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-coffee', 'text-white');
+
+            // Update chart data based on period
+            let newData, newLabels;
+            if (period === 'day') {
+                newLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+                newData = [1200000, 1500000, 1800000, 2100000, 2400000, 2200000, 1900000];
+            } else if (period === 'week') {
+                newLabels = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'];
+                newData = [8500000, 9200000, 10100000, 9800000];
+            } else if (period === 'month') {
+                newLabels = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'];
+                newData = [35000000, 42000000, 38000000, 45000000, 48000000, 52000000];
+            }
+
+            revenueChart.data.labels = newLabels;
+            revenueChart.data.datasets[0].data = newData;
+            revenueChart.update();
+        }
+
+        // Export functions
+        function exportPDF() {
+            showNotification('Đang xuất báo cáo PDF...', 'info');
+            setTimeout(() => {
+                document.getElementById('exportModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }, 2000);
+        }
+
+        function exportExcel() {
+            showNotification('Đang xuất báo cáo Excel...', 'info');
+            setTimeout(() => {
+                document.getElementById('exportModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }, 2000);
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'} text-white`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('exportModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeExportModal();
+            }
+        });
+    </script>
+</body>
+</html>
